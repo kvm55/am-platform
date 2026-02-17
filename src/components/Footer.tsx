@@ -6,7 +6,7 @@ export default function Footer() {
           <span className="text-greenery font-bold">Propwell</span>
           <span className="text-sm">Asset Management Platform</span>
         </div>
-        <p className="text-sm text-beige/70">&copy; {new Date().getFullYear()} The Umbrella Group. All rights reserved.</p>
+        <p className="text-sm text-beige/70">&copy; {new Date().getFullYear()} The Upland Group. All rights reserved.</p>
       </div>
     </footer>
   );

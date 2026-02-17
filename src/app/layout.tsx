@@ -6,7 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Propwell AM Platform",
-  description: "Asset Management Platform by The Umbrella Group",
+  description: "Asset Management Platform by The Upland Group",
 };
 
 export default function RootLayout({

@@ -121,4 +121,4 @@ With `USE_MOCK=true` (default), all tools work without external API keys or a Su
 
 ## License
 
-Proprietary — The Umbrella Group (TUG).
+Proprietary — The Upland Group (TUG).
