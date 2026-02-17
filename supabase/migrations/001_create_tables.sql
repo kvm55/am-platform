@@ -1,14 +1,13 @@
 -- AM Platform — Database Schema
 -- Run this migration after creating the Supabase project
 
--- Enable UUID generation
-create extension if not exists "uuid-ossp";
+-- gen_random_uuid() is built into Postgres 13+ (used by Supabase)
 
 -- ============================================================
 -- Properties
 -- ============================================================
 create table properties (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   address text not null,
   city text not null default '',
@@ -43,7 +42,7 @@ create policy "Users can delete own properties"
 -- Analyses (Comp Analysis results)
 -- ============================================================
 create table analyses (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   property_id uuid references properties(id) on delete set null,
   status text not null default 'completed',
@@ -76,7 +75,7 @@ create policy "Users can delete own analyses"
 -- Underwriting Models
 -- ============================================================
 create table underwriting_models (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   property_id uuid references properties(id) on delete set null,
   investment_type text not null default 'Long Term Hold',
