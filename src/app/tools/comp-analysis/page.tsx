@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { formatCurrency, formatNumber, gradeColorClass } from "@/lib/format";
 import type { Tier1Report } from "@/lib/pipeline/types";
 import type { PropertyScore } from "@/lib/scoring";
 
@@ -9,19 +12,6 @@ type AnalysisResult = {
   score: PropertyScore;
   analysisId?: string;
 };
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatNumber(value: number, decimals = 2): string {
-  return value.toFixed(decimals);
-}
 
 function ScoreBar({ label, score, max = 100 }: { label: string; score: number; max?: number }) {
   const pct = Math.min((score / max) * 100, 100);
@@ -40,6 +30,7 @@ function ScoreBar({ label, score, max = 100 }: { label: string; score: number; m
 }
 
 export default function CompAnalysisPage() {
+  const router = useRouter();
   const [address, setAddress] = useState("");
   const [premiumRent, setPremiumRent] = useState("");
   const [comments, setComments] = useState("");
@@ -72,6 +63,7 @@ export default function CompAnalysisPage() {
 
       const data = await resp.json();
       setResult(data);
+      router.refresh();
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Analysis failed");
@@ -82,6 +74,10 @@ export default function CompAnalysisPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Breadcrumbs items={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Comp Analysis" },
+      ]} />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-teal">Comp Analysis</h1>
         <p className="text-teal/60 mt-1">
@@ -199,12 +195,7 @@ export default function CompAnalysisPage() {
                   }`}>
                     {result.score.totalScore}
                   </div>
-                  <div className={`text-sm font-semibold px-2 py-0.5 rounded ${
-                    result.score.grade === "A" ? "bg-green-100 text-green-700" :
-                    result.score.grade === "B" ? "bg-teal/10 text-teal" :
-                    result.score.grade === "C" ? "bg-yellow-100 text-yellow-700" :
-                    "bg-red-100 text-red-700"
-                  }`}>
+                  <div className={`text-sm font-semibold px-2 py-0.5 rounded ${gradeColorClass(result.score.grade)}`}>
                     Grade {result.score.grade}
                   </div>
                   <p className="text-xs text-teal/50 mt-1">&plusmn;{result.score.confidenceBand} pts</p>

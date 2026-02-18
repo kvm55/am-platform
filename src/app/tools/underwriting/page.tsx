@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import {
   type InvestmentType,
   type PropertyInputs,
@@ -74,6 +76,7 @@ function MetricCard({ label, value, highlight }: { label: string; value: string;
 }
 
 export default function UnderwritingPage() {
+  const router = useRouter();
   const [investmentType, setInvestmentType] = useState<InvestmentType>("Long Term Hold");
   const [inputs, setInputs] = useState<PropertyInputs>(getDefaultInputs("Long Term Hold"));
   const [loading, setLoading] = useState(false);
@@ -128,6 +131,7 @@ export default function UnderwritingPage() {
 
       const data = await resp.json();
       setResult(data);
+      router.refresh();
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Underwriting failed");
@@ -138,6 +142,10 @@ export default function UnderwritingPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Breadcrumbs items={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Underwriting" },
+      ]} />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-teal">Underwriting</h1>
         <p className="text-teal/60 mt-1">Build full underwriting models with buy/hold/sell recommendations</p>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { formatCurrency, gradeColorClass } from "@/lib/format";
 
 const tools = [
   {
@@ -54,15 +55,6 @@ interface RecentModel {
   inputs: { streetAddress?: string; city?: string; state?: string } | null;
   recommendation: { action: string; confidence: string } | null;
   created_at: string;
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
 }
 
 export default function Dashboard() {
@@ -173,7 +165,7 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-3">
               {analyses.map((a) => (
-                <div key={a.id} className="flex items-center justify-between py-2 border-b border-beige/50 last:border-0">
+                <Link key={a.id} href={`/tools/comp-analysis/${a.id}`} className="flex items-center justify-between py-2 border-b border-beige/50 last:border-0 hover:bg-cream/30 -mx-2 px-2 rounded transition-colors">
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-teal truncate">{a.address}</p>
                     <p className="text-xs text-teal/50">{new Date(a.created_at).toLocaleDateString()}</p>
@@ -183,17 +175,12 @@ export default function Dashboard() {
                       <span className="text-sm text-teal font-medium">{formatCurrency(a.recommended_rent)}</span>
                     )}
                     {a.score_data?.grade && (
-                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                        a.score_data.grade === "A" ? "bg-green-100 text-green-700" :
-                        a.score_data.grade === "B" ? "bg-teal/10 text-teal" :
-                        a.score_data.grade === "C" ? "bg-yellow-100 text-yellow-700" :
-                        "bg-red-100 text-red-700"
-                      }`}>
+                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${gradeColorClass(a.score_data.grade)}`}>
                         {a.score_data.grade}
                       </span>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -219,7 +206,7 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-3">
               {models.map((m) => (
-                <div key={m.id} className="flex items-center justify-between py-2 border-b border-beige/50 last:border-0">
+                <Link key={m.id} href={`/tools/underwriting/${m.id}`} className="flex items-center justify-between py-2 border-b border-beige/50 last:border-0 hover:bg-cream/30 -mx-2 px-2 rounded transition-colors">
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-teal truncate">
                       {m.inputs?.streetAddress
@@ -241,7 +228,7 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
