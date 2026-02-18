@@ -2,12 +2,24 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Header() {
   const { user, signOut } = useAuth();
   const [toolsOpen, setToolsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!toolsOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setToolsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [toolsOpen]);
 
   return (
     <header className="bg-teal text-white">
@@ -25,7 +37,7 @@ export default function Header() {
                 <Link href="/dashboard" className="text-cream hover:text-greenery transition-colors text-sm font-medium">
                   Dashboard
                 </Link>
-                <div className="relative">
+                <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setToolsOpen(!toolsOpen)}
                     className="text-cream hover:text-greenery transition-colors text-sm font-medium flex items-center gap-1"
@@ -36,10 +48,7 @@ export default function Header() {
                     </svg>
                   </button>
                   {toolsOpen && (
-                    <div
-                      className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50"
-                      onMouseLeave={() => setToolsOpen(false)}
-                    >
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
                       <Link href="/tools/comp-analysis" className="block px-4 py-2 text-teal hover:bg-cream text-sm" onClick={() => setToolsOpen(false)}>
                         Comp Analysis
                       </Link>

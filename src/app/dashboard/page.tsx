@@ -89,8 +89,34 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-pulse text-teal/60">Loading...</div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <div className="h-8 w-48 bg-beige/50 rounded animate-pulse" />
+          <div className="h-4 w-32 bg-beige/30 rounded animate-pulse mt-2" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white rounded-xl shadow-sm p-6">
+              <div className="w-14 h-14 bg-beige/30 rounded-lg animate-pulse mb-4" />
+              <div className="h-5 w-32 bg-beige/40 rounded animate-pulse mb-2" />
+              <div className="h-3 w-full bg-beige/20 rounded animate-pulse" />
+              <div className="h-3 w-2/3 bg-beige/20 rounded animate-pulse mt-1" />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-white rounded-xl shadow-sm p-6">
+              <div className="h-5 w-40 bg-beige/40 rounded animate-pulse mb-4" />
+              {[1, 2, 3].map((j) => (
+                <div key={j} className="flex justify-between py-2 border-b border-beige/20">
+                  <div className="h-4 w-48 bg-beige/30 rounded animate-pulse" />
+                  <div className="h-4 w-16 bg-beige/30 rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

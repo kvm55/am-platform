@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { Tier1Report } from "@/lib/pipeline/types";
 import type { PropertyScore } from "@/lib/scoring";
 
@@ -46,6 +46,7 @@ export default function CompAnalysisPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +72,7 @@ export default function CompAnalysisPage() {
 
       const data = await resp.json();
       setResult(data);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Analysis failed");
     } finally {
@@ -157,7 +159,7 @@ export default function CompAnalysisPage() {
 
       {/* Results */}
       {result && (
-        <div className="space-y-6">
+        <div ref={resultsRef} className="space-y-6">
           {/* Subject Property */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-teal mb-4">Subject Property</h2>
@@ -389,6 +391,22 @@ export default function CompAnalysisPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Run Another */}
+          <div className="flex justify-center">
+            <button
+              onClick={() => {
+                setResult(null);
+                setAddress("");
+                setPremiumRent("");
+                setComments("");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="bg-white text-teal border border-beige px-6 py-2.5 rounded-lg font-medium hover:bg-cream transition-colors"
+            >
+              Run Another Analysis
+            </button>
           </div>
 
           {/* Rentometer Data */}

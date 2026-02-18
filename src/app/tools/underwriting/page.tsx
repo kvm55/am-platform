@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   type InvestmentType,
   type PropertyInputs,
@@ -79,6 +79,7 @@ export default function UnderwritingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<UWResult | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleTypeChange = (type: InvestmentType) => {
     setInvestmentType(type);
@@ -127,6 +128,7 @@ export default function UnderwritingPage() {
 
       const data = await resp.json();
       setResult(data);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Underwriting failed");
     } finally {
@@ -270,7 +272,7 @@ export default function UnderwritingPage() {
 
       {/* Results */}
       {result && (
-        <div className="space-y-6">
+        <div ref={resultsRef} className="space-y-6">
           {/* Recommendation Banner */}
           <div className={`rounded-xl p-6 ${
             result.recommendation.action === "Buy" ? "bg-green-50 border border-green-200" :

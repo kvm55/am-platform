@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 
 interface AnalysisSummary {
   id: string;
@@ -34,6 +35,7 @@ export default function PortfolioPage() {
   const [error, setError] = useState("");
   const [sortField, setSortField] = useState<"address" | "rent" | "score" | "date">("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [exportError, setExportError] = useState("");
 
   const fetchPortfolio = useCallback(async () => {
     try {
@@ -53,15 +55,20 @@ export default function PortfolioPage() {
   }, [fetchPortfolio]);
 
   const handleExport = async () => {
-    const resp = await fetch("/api/portfolio/export");
-    if (!resp.ok) return;
-    const blob = await resp.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "portfolio_export.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+    setExportError("");
+    try {
+      const resp = await fetch("/api/portfolio/export");
+      if (!resp.ok) throw new Error("Export failed");
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "portfolio_export.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setExportError("Failed to export CSV. Please try again.");
+    }
   };
 
   const handleSort = (field: typeof sortField) => {
@@ -87,7 +94,32 @@ export default function PortfolioPage() {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="animate-pulse text-teal/50 text-center py-20">Loading portfolio...</div>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="h-8 w-56 bg-beige/50 rounded animate-pulse" />
+            <div className="h-4 w-72 bg-beige/30 rounded animate-pulse mt-2" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-xl shadow-sm p-5">
+              <div className="h-3 w-20 bg-beige/30 rounded animate-pulse mb-2" />
+              <div className="h-8 w-24 bg-beige/40 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="h-5 w-44 bg-beige/40 rounded animate-pulse mb-4" />
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex justify-between py-3 border-b border-beige/20">
+              <div className="h-4 w-56 bg-beige/30 rounded animate-pulse" />
+              <div className="flex gap-4">
+                <div className="h-4 w-16 bg-beige/30 rounded animate-pulse" />
+                <div className="h-4 w-10 bg-beige/30 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -114,6 +146,9 @@ export default function PortfolioPage() {
 
       {error && (
         <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-6">{error}</p>
+      )}
+      {exportError && (
+        <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-6">{exportError}</p>
       )}
 
       {/* Metrics Bar */}
@@ -149,7 +184,10 @@ export default function PortfolioPage() {
         {sortedAnalyses.length === 0 ? (
           <div className="text-center py-12 text-teal/50">
             <p className="text-lg mb-2">No analyses yet</p>
-            <p className="text-sm">Run a comp analysis to start building your portfolio view.</p>
+            <p className="text-sm mb-3">Run a comp analysis to start building your portfolio view.</p>
+            <Link href="/tools/comp-analysis" className="text-teal font-medium hover:underline">
+              Run a Comp Analysis
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
