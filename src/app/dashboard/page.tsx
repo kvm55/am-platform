@@ -69,18 +69,23 @@ export default function Dashboard() {
   const { user, loading } = useAuth();
   const [analyses, setAnalyses] = useState<RecentAnalysis[]>([]);
   const [models, setModels] = useState<RecentModel[]>([]);
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
+    if (!user) return;
+
+    setFetchError("");
+
     fetch("/api/analyses")
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => setAnalyses(Array.isArray(data) ? data.slice(0, 5) : []))
-      .catch(() => {});
+      .catch(() => setFetchError("Failed to load recent data."));
 
     fetch("/api/underwrite")
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => setModels(Array.isArray(data) ? data.slice(0, 5) : []))
-      .catch(() => {});
-  }, []);
+      .catch(() => setFetchError("Failed to load recent data."));
+  }, [user]);
 
   if (loading) {
     return (
@@ -98,6 +103,10 @@ export default function Dashboard() {
           Welcome back{user?.email ? `, ${user.email}` : ""}
         </p>
       </div>
+
+      {fetchError && (
+        <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-6">{fetchError}</p>
+      )}
 
       {/* Tool Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
