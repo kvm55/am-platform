@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect, useRef } from "react";
+import AmpBoltIcon from "@/components/AmpBoltIcon";
 
 export default function Header() {
   const { user, signOut } = useAuth();
@@ -25,9 +26,10 @@ export default function Header() {
     <header className="bg-teal text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2">
-            <span className="text-greenery font-bold text-xl tracking-tight">Propwell</span>
-            <span className="text-beige text-sm font-medium">AM</span>
+          <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2.5">
+            <AmpBoltIcon size={28} />
+            <span className="text-beige font-bold text-xl tracking-tight">Propwell</span>
+            <span className="text-greenery text-sm font-medium">AMP</span>
           </Link>
 
           {user && (

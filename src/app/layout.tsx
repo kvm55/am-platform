@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Propwell AM Platform",
+  title: "Propwell AMP",
   description: "Asset Management Platform by The Upland Group",
 };
 

@@ -74,7 +74,7 @@ export default function SignUp() {
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-teal">
-              <span className="text-greenery">Propwell</span> AM
+              <span className="text-teal">Propwell</span> <span className="bg-teal text-greenery px-2 py-0.5 rounded-md">AMP</span>
             </h1>
             <p className="text-teal/60 mt-2">Create your account</p>
           </div>
