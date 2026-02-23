@@ -73,13 +73,15 @@ export default function Home() {
                 key={tool.title}
                 className="bg-white rounded-xl shadow-sm p-6"
               >
-                <div
-                  className={`${tool.color} text-greenery w-14 h-14 rounded-lg flex items-center justify-center mb-4`}
-                >
-                  {tool.icon}
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <div
+                    className={`${tool.color} text-greenery w-12 h-12 rounded-lg flex items-center justify-center shrink-0`}
+                  >
+                    {tool.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-teal">{tool.title}</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-teal mb-2">{tool.title}</h3>
-                <p className="text-sm text-teal/60 leading-relaxed">{tool.description}</p>
+                <p className="text-sm text-teal/60 leading-relaxed text-center">{tool.description}</p>
               </div>
             ))}
           </div>
